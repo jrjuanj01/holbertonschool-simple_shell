@@ -1,0 +1,49 @@
+.TH _SHELL 1 _Shell\-0.1
+.SH NAME
+_Shell \- Custom version of a simple shell program
+.SH SYNOPSIS
+.B _shell
+.RB [ \-Display
+.IR a prompt ]
+.RB [ \-Handle
+.IR command lines ]
+.RB [ \-Handle
+.IR PATH ]
+.RB [ \-Exit
+.IR built-in ]
+.RB [ \-env
+.IR built-in ]
+.P
+.BR _Shell("...")
+.SH DESCRIPTION
+.B _Simple_Shell
+is a customized version of our own simple shell program, made to execute a variety of commands while mantainig its simplicity. It is part of a group project.
+.SH OPTIONS
+.TP
+.B \-Display
+Display a prompt and wait for the user to type a command. A command line always ends with a new line.
+The prompt is displayed again each time a command has been executed.
+The command lines are simple, no semicolons, no pipes, no redirections or any other advanced features.
+The command lines are made only of one word. No arguments will be passed to programs.
+If an executable cannot be found, print an error message and display the prompt again.
+Handle errors.
+You have to handle the “end of file” condition (Ctrl+D)
+.TP
+.B \-Handle
+Handle command lines with arguments
+.TP
+.B \-Handle
+Handle the PATH
+fork must not be called if the command doesn’t exist
+.TP
+.B \-Exit
+Implement the exit built-in, that exits the shell
+Usage: exit
+You don’t have to handle any argument to the built-in exit
+.TP
+.B \-env
+Implement the env built-in, that prints the current environment.
+.SH AUTHORS
+.B JAOV & JG & JJJMT
+.SH COPYRIGHT
+.B GNU not aplicable copyright, not for public use.
