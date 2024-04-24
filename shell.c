@@ -6,9 +6,9 @@
  */
 int main(void)
 {
-	char *cmnd, *copy, **args, **path;
+	char *cmnd, **args, **path;
 	size_t len = 0;
-	int idx, f,  input = 0;
+	int input = 0;
 
 	while (1)
 	{
@@ -32,8 +32,6 @@ int main(void)
 			executer(args);
 		path = pathfinder("PATH", args);
 		if (path == NULL)
-		//executer(args);
-		//else
 			printf("./hsh: %i: %s not found\n", input, args[0]);
 		free(args);
 	}
