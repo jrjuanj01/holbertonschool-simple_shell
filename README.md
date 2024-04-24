@@ -5,11 +5,11 @@
 
 ## Topics
 
-* [How to run](#how_to_run)
+* [How to run](#how-to-run)
 * [Functions](#functions)
-* [Files](#functions)
-* [Examples](#examples)
-* [Credit](#credit_to)
+* [Files](#files)
+* [Examples](#examples-of-different-commands-to-run)
+* [Credit](#credit-to)
 
 ## How to run
 1. Download the repository using the `git clone` command with the following link: `git@github.com:jrjuanj01/holbertonschool-simple_shell.git`
@@ -20,7 +20,7 @@
 
 After that you can run any simple command that does not require any advanced features like pipelines, redirections or semicolons.
 
-## Functios
+## Functions
 - Displays a prompt and waits for the user to type a command.
 - Supports basic commands such as: ls, mv, touch, rm, etc...
 - Prints error messages if command is not found.
