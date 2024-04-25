@@ -1,6 +1,8 @@
 # Holbertonschool-simple-shell group project
 By: Jose A. Oquendo Vazquez, Jezer Gonzalez & Juan Jose Junior Mendez Torres
 
+Description: During this proyect we are told to create a shell program from scratch as a group task. A shell program is a type of computer program called command-line interpreter that lets the users control the operating system with command-lines. It allows users to communicate efficiently and directly with their operating systems.Shell is one of the simplest ways to set up automation that give the developers and users conditional and loop control structures to repeat commands. For a more detailed explanation, refer to the man page of the proyect with the comman "man ./man_1_simple_shell". The following is a description of the tasks to complete during this proyect and the intructions.
+
 Tasks:
 
 0: README, man AUTHORS
@@ -8,9 +10,6 @@ Tasks:
 Intructions: Write a README file and a man page for your shell. You should have the authors file at the root ofyour repository, listing all individuals having contributed content to the repository.
 
 Use: Were asked to create both a man page and a README file that can be used to understand better the process we take as well as the result for the shell project.
-
-Progress: Jose Oquendo is in charge of writing the start of this file, as well as updating it as we advance on the proyect.
-The README file and the man page have theyre basic structure already built.
 
 1: Betty would be proud
 
