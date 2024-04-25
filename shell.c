@@ -12,12 +12,10 @@ int main(void)
 
 	while (1)
 	{
-		printf("$ ");
+		if (isatty(STDIN_FILENO))
+			printf("$ ");
 		if (getline(&cmnd, &len, stdin) == -1)
-		{
-			perror("Memory allocation error");
-			exit(EXIT_FAILURE);
-		}
+			break;
 		input++;
 		cmnd[strcspn(cmnd, "\n")] = '\0';
 		args = token_maker(cmnd);
@@ -31,9 +29,8 @@ int main(void)
 		if (access(args[0], X_OK) == 0)
 			executer(args);
 		path = pathfinder("PATH", args);
-		if (path == NULL)
+		if (path == NULL && access(args[0], X_OK) == -1)
 			printf("./hsh: %i: %s not found\n", input, args[0]);
-		free(args);
 	}
 	free(cmnd);
 	free(args);
