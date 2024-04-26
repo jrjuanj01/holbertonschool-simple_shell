@@ -1,0 +1,32 @@
+.TH _SHELL 1 _Shell\-0.1
+.SH NAME
+_Shell \- Custom version of a simple shell program
+.P
+.BR _Shell("...")
+.SH DESCRIPTION
+.B _Simple_Shell
+is a customized version of our own simple shell program, made to execute a variety of commands while mantainig its simplicity. With it you are able to run a variety of commands without any advanced features. This shell project is made to be able to handle commands with line arguments, the PATH and enviorment of the given command. So it is a program made to mantain its simplicity and being able to run diferent commands back to back. It is part of a group project.
+.SH OPTIONS
+.TP
+.B \-Display
+.TP
+The shell is able to display the results of the command the user runs, or the error message in case of an error, and insert a new line to be able to keep implementing commands into the command line until you type "exit" to exit the Shell program itself. It should also be able to display the PATH of a file or command if so it is desired, aswell as it being capable to identify the errors that appear and handle the "end of file" condition (Ctr + D).
+.P
+.B \-Use
+To run the shell program you have to type ./hsh on the terminal, from there the program is made to take a command the user inputs and runt it through recognition programs to make sure it is recorded and capable of executing it. Along executing the given command, it is also capable of finding its PATH inside the computer itself. It is also capable of verifying if the command its executable in order to run said command, if none of the verification works then the Shell tells you that the command doesnt exist or that there has been an error. Once a comand is completely verified and it either runs the command or prints the error message, the Shell implements a free command to allow you to re-write the command that gave you an error if you have it misspelled or start from scratch and try using a new command to run the same thing again. To exit the Shell you have to type "exit" on your terminal, in order for it to break the command lines and allow the user to exit the Shell into the normal terminal.
+.P
+.B \-Examples:
+.TP
+.B ls - list the files on the current location. 
+.TP
+.B touch - used to edit or create files. The "mkdir" command, used to create a new directory. 
+.TP
+.B rm - used to erase empty files. 
+.TP
+.B mv - used to move files and their contents. 
+.TP
+.B vi - used to create a file and write in it text or scripts. 
+.TP
+.B cat - used to read the contents of a file.
+.SH AUTHORS
+.B JAOV & JG & JJJMT
