@@ -1,105 +1,125 @@
 #include "shell.h"
-
 /**
- * executer - executes the given command
- * @cmnd: given command
- * Return: status number
+ * _getenv - gets envitoment
+ * @name: name of enviroment variable
+ * Return: value after =, or NULL
  */
-int executer(char **cmnd)
+char *_getenv(const char *name)
 {
-	pid_t my_pid = fork();
-
-	if (my_pid == 0)
-		execve(cmnd[0], cmnd,  NULL);
-	else
-		wait(NULL);
-	return (0);
-}
-
-/**
- * pathfinder - finds the path of the command to be executed
- * @name: name of the path to be found
- * @args: command to be executed
- * Return: the full path of the command to be executed or NULL if failed
- */
-char **pathfinder(const char *name, char **args)
-{
+	size_t name_len = strlen(name);
 	char **env = environ;
-	char *path, *poss, *full_path = NULL;
-	size_t len;
 
 	while (*env != NULL)
 	{
-		if (strncmp(*env, name, strlen(name)) == 0 && (*env)[strlen(name)] == '=')
-		{
-			full_path = strdup(*env + strlen(name) + 2);
-			break;
-		}
-		++env;
+		if (strncmp(*env, name, name_len) == 0 && (*env)[name_len] == '=')
+			return (&(*env)[name_len + 1]); /*Return the value after '='*/
+		env++;
 	}
-	path = strtok(full_path, ":");
-	while (path != NULL)
-	{
-		len = snprintf(NULL, 0, "%s/%s", path, args[0]) + 1;
-		poss = malloc(len);
-		if (poss == NULL || full_path == NULL)
-		{
-			perror("Memory allocation error 2");
-			exit(EXIT_FAILURE);
-		}
-		sprintf(poss, "%s/%s", path, args[0]);
-		if (access(poss, X_OK) == 0)
-		{
-			args[0] = poss;
-			executer(args);
-			free(full_path);
-			free(poss);
-			return (args);
-		}
-		free(poss);
-		path = strtok(NULL, ":");
-	}
-	free(full_path);
-	return (NULL);
+	return (NULL); /*Environment variable not found*/
 }
-
 /**
- * token_maker - takes a string and parses it's components
- * @str: is the string to parse
- * Return: the array of strings of each part of the sentence
+ * parse_input - analyses user input and tokenizes
+ * @input: user input string
+ * Return: array of tokens
  */
-char **token_maker(char *str)
+char **parse_input(char *input)
 {
-	char **args = malloc(sizeof(char *) * INITIAL_CAPACITY);
+	char **args = malloc(MAX_ARGS * sizeof(char *));
 	char *token;
-	int amnt = 0;
+	int num_args = 0;
 
 	if (!args)
 	{
-		perror("Memory allocation error 1");
+		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	token = strtok(str, " \n");
-	while (token != NULL)
+	token = strtok(input, " \n");
+	while (token != NULL && num_args < MAX_ARGS - 1)
 	{
-		args[amnt] = token;
+		args[num_args] = token;
 		token = strtok(NULL, " \n");
-		amnt++;
+		num_args++;
 	}
-	args[amnt] = NULL;
+	args[num_args] = NULL;
 	return (args);
 }
-/*
- * empty - frees an array of strings
- * @str: the array of strings
+/**
+ * execute_command - forks process, executes command and waits if necesary
+ * @args: array of tokens with command & arguments
+ * Return: -1 on fork error, or 0 success
  */
-int empty(char **str)
+int execute_command(char **args)
 {
-	int idx1, idx2;
+	pid_t pid = fork();
 
-	for (idx1 = 0; str[idx1] != NULL ; idx1++)
-	for (idx2 = 0; idx2 < idx1 ; idx2++)
-		free(str[idx2]);
-	free(str);
-	return (0);
+	if (pid == -1)
+	{
+		perror("fork");
+		return (-1);
+	}
+	else if (pid == 0) /*Child process*/
+	{
+		if (execve(args[0], args, environ) == -1)
+		{
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+	}
+	else /*Parent process*/
+	{
+		int status;
+
+		if (wait(&status) == -1)
+		{
+			perror("wait");
+			return (-1);
+		}
+		if (WIFEXITED(status)) /*checks if child terminated normally*/
+		{
+			return (WEXITSTATUS(status)); /*return child process exit status*/
+		}
+		else
+			return (-1);
+	}
+	return (-1);
+}
+/**
+ * execute_or_find_command - checks command input for execution
+ * @args: array of tokens with args[0] being the command
+ * Return: -1 if command not found, 0 on success
+ */
+int execute_or_find_command(char **args)
+{
+	/* Check if the command is a full path */
+	if (access(args[0], X_OK) == 0)
+	{
+		return (execute_command(args));
+	}
+	else
+	{
+		/* Check if the command exists in PATH */
+		char *path = _getenv("PATH");
+		char *path_copy = strdup(path);
+		char *dir = strtok(path_copy, ":");
+
+		while (dir != NULL)
+		{
+			char *command_path = malloc(strlen(dir) + strlen(args[0]) + 2);
+
+			sprintf(command_path, "%s/%s", dir, args[0]);
+			if (access(command_path, X_OK) == 0)
+			{
+				args[0] = command_path; /* Update command with full path */
+				execute_command(args);
+				free(command_path);
+				free(path_copy);
+				return (0); /*Command found and executed successfully*/
+			}
+			free(command_path);
+			dir = strtok(NULL, ":");
+		}
+		free(path_copy);
+		return (-1); /*Command not found*/
+	}
+	return (0); /*Command executed successfully*/
 }

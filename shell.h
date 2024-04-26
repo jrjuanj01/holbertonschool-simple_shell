@@ -8,12 +8,12 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define INITIAL_CAPACITY 10
+#define MAX_ARGS 10
 
 extern char **environ;
-int executer(char **cmnd);
-char **pathfinder(const char *name, char **cmnd);
-char **token_maker(char *str);
-int empty(char **str);
+char *_getenv(const char *name);
+char **parse_input(char *input);
+int execute_command(char **args);
+int execute_or_find_command(char **args);
 
 #endif /* SHELL_H */

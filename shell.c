@@ -1,49 +1,47 @@
 #include "shell.h"
-
 /**
- * main - acts as an interactive shell
- * Return: 0 on success
+ * main - entry point, command line interpreter
+ * Return: always 0 on success or Error cases
  */
 int main(void)
 {
-	char *cmnd = NULL, **args, **path;
-	size_t len = 0, input = 0;
+	char **args;
+	char *input = NULL;
+	size_t bufsize = 0;
+	int count = 0;
 
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
 			printf("$ ");
-		if (getline(&cmnd, &len, stdin) == -1)
-			break;
-		input++;
-		cmnd[strcspn(cmnd, "\n")] = '\0';
-		args = token_maker(cmnd);
-		if (args[0] == NULL)
+		/*reading user input*/
+		if (getline(&input, &bufsize, stdin) == -1)
 		{
-			empty(args);
+			free(input);
+			break; /*eof (ctrl+D)*/
+		}
+		count++;
+		/* trim trailing newline*/
+		if (input[strlen(input)] == '\n')
+			input[strlen(input)] = '\0';
+		args = parse_input(input); /*tokenize user input*/
+		if (args == NULL)
+		{
+			free(input);
 			continue;
 		}
-		if (strcmp(args[0], "exit") == 0)
+		if (args[0] != NULL)
 		{
-			free(cmnd);
-			empty(args);
-			break;
-		}
-		if (access(args[0], X_OK) == 0)
-		{
-			executer(args);
-			empty(args);
-		}
-		else
-		{
-			path = pathfinder("PATH", args);
-			if (path == NULL && access(args[0], X_OK) == -1)
+			if (strcmp(args[0], "exit") == 0)
 			{
-				printf("./hsh: %li: %s not found\n", input, args[0]);
-				free(path);
-				empty(args);
+				free(input);
+				free(args);
+				break;  /*Exit the shell*/
 			}
+			else if (execute_or_find_command(args) == -1)
+				printf("./hsh: %d: %s: not found\n", count, args[0]);
 		}
+		free(args);
 	}
 	return (0);
 }
