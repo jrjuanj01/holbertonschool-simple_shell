@@ -79,14 +79,27 @@ char **token_maker(char *str)
 		perror("Memory allocation error 1");
 		exit(EXIT_FAILURE);
 	}
-	token = strtok(str, " ");
+	token = strtok(str, " \n");
 	while (token != NULL)
 	{
 		args[amnt] = token;
-		token = strtok(NULL, " ");
+		token = strtok(NULL, " \n");
 		amnt++;
 	}
 	args[amnt] = NULL;
-	free(token);
 	return (args);
+}
+/*
+ * empty - frees an array of strings
+ * @str: the array of strings
+ */
+int empty(char **str)
+{
+	int idx1, idx2;
+
+	for (idx1 = 0; str[idx1] != NULL ; idx1++)
+	for (idx2 = 0; idx2 < idx1 ; idx2++)
+		free(str[idx2]);
+	free(str);
+	return (0);
 }

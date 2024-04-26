@@ -14,5 +14,6 @@ extern char **environ;
 int executer(char **cmnd);
 char **pathfinder(const char *name, char **cmnd);
 char **token_maker(char *str);
+int empty(char **str);
 
 #endif /* SHELL_H */

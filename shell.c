@@ -6,9 +6,8 @@
  */
 int main(void)
 {
-	char *cmnd, **args, **path;
-	size_t len = 0;
-	int input = 0;
+	char *cmnd = NULL, **args, **path;
+	size_t len = 0, input = 0;
 
 	while (1)
 	{
@@ -17,30 +16,34 @@ int main(void)
 		if (getline(&cmnd, &len, stdin) == -1)
 			break;
 		input++;
-		if (cmnd[strlen(cmnd) - 1] == '\n')
-			cmnd[strlen(cmnd) - 1] = '\0';
+		cmnd[strcspn(cmnd, "\n")] = '\0';
 		args = token_maker(cmnd);
 		if (args[0] == NULL)
 		{
-			free(cmnd);
+			empty(args);
 			continue;
 		}
 		if (strcmp(args[0], "exit") == 0)
+		{
+			free(cmnd);
+			empty(args);
 			break;
+		}
 		if (access(args[0], X_OK) == 0)
+		{
 			executer(args);
+			empty(args);
+		}
 		else
 		{
 			path = pathfinder("PATH", args);
 			if (path == NULL && access(args[0], X_OK) == -1)
 			{
-				printf("./hsh: %i: %s not found\n", input, args[0]);
+				printf("./hsh: %li: %s not found\n", input, args[0]);
 				free(path);
+				empty(args);
 			}
 		}
-		free(cmnd);
-		free(args);
 	}
-	free(args);
 	return (0);
 }
